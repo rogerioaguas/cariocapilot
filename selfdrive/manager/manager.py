@@ -44,7 +44,7 @@ def manager_init() -> None:
     ("CameraOffset", "0"),
     ("CarMake", "0"),
     ("CarModel", ""),
-    ("CompletedTrainingVersion", "0"),
+    ("CompletedTrainingVersion", "1"),
     ("CustomOffsets", "0"),
     ("CustomTorqueLateral", "0"),
     ("DevUI", "1"),
@@ -62,7 +62,7 @@ def manager_init() -> None:
     ("GapAdjustCruiseTr", "4"),
     ("GpxDeleteAfterUpload", "1"),
     ("GpxDeleteIfUploaded", "1"),
-    ("HasAcceptedTerms", "0"),
+    ("HasAcceptedTerms", "1"),
     ("HandsOnWheelMonitoring", "0"),
     ("LastSpeedLimitSignTap", "0"),
     ("MapTurnSpeedControl", "0"),
@@ -89,6 +89,7 @@ def manager_init() -> None:
     ("UploadHiRes", "0"),
     ("VisionCurveLaneless", "0"),
     ("VisionTurnSpeedControl", "1"),
+    ("StopAndGoHack", "1"),
     ("VwAccType", "0"),
   ]
   if not PC:

@@ -103,8 +103,8 @@ SPGeneralPanel::SPGeneralPanel(QWidget* parent) : QWidget(parent) {
   main_layout->addWidget(new ParamControl("StopAndGoHack",
                                   "Enable SnG TSS2 hack",
                                   "DANGER! only activate if your car is TSS2 And do not stop and go",
-                                  "../assets/offroad/icon_warning.png",
-                                  this));
+                                  "../assets/offroad/icon_warning.png"));
+
   main_layout->addWidget(horizontal_line());
 
   main_layout->addWidget(new MaxTimeOffroad());
