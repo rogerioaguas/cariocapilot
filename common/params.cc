@@ -103,7 +103,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"CommIssueOff", PERSISTENT},
     {"CompletedTrainingVersion", PERSISTENT},
     {"ControlsdLaggingOff", PERSISTENT},
-    {"ControlsReady", CLEAR_ON_MANAGER_START | CLEAR_ON_PANDA_DISCONNECT | CLEAR_ON_IGNITION_ON},
+    {"ControlsReady", CLEAR_ON_MANAGER_START | CLEAR_ON_IGNITION_ON},
     {"CorollaIndi", PERSISTENT},
     {"CurrentRoute", CLEAR_ON_MANAGER_START | CLEAR_ON_IGNITION_ON},
     {"CustomMapbox", PERSISTENT},
