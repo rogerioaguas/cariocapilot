@@ -489,7 +489,7 @@ class CarState(CarStateBase):
 
     if CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):
       signals += [
-        ("ACC_TYPE", "ACC_CONTROL"),
+        ("ACC_TYPE", "ACC_CONTROL",0),
         ("FCW", "ACC_HUD"),
       ]
       checks += [
