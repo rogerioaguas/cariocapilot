@@ -87,16 +87,26 @@ SPGeneralPanel::SPGeneralPanel(QWidget* parent) : QWidget(parent) {
   QWidget* uploadRawMain = new QWidget(this);
   QVBoxLayout* uploadRawSub = new QVBoxLayout(this);
 
+
   main_layout->addWidget(new ParamControl("QuietDrive",
                                           "Quiet Drive 🤫",
                                           "sunnypilot will display alerts but only play the most important warning sounds. This feature can be toggled while the car is on.",
                                           "../assets/offroad/icon_mute.png"));
+
   main_layout->addWidget(horizontal_line());
   main_layout->addWidget(new ParamControl("PrebuiltOn",
                                           "Fast Boot (Prebuilt)",
                                           "sunnypilot will fast boot by creating a Prebuilt file. Note: Turn off this feature if you have made any UI changes!",
                                           "../assets/offroad/icon_shell.png"));
+
   main_layout->addWidget(horizontal_line());
+  main_layout->addWidget(new ParamControl("StopAndGoHack",
+                                  "Enable SnG TSS2 hack",
+                                  "DANGER! only activate if your car is TSS2 And do not stop and go",
+                                  "../assets/offroad/icon_warning.png",
+                                  this));
+  main_layout->addWidget(horizontal_line());
+
   main_layout->addWidget(new MaxTimeOffroad());
   main_layout->addWidget(horizontal_line());
   main_layout->addWidget(new OnroadScreenOff());

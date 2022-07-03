@@ -25,7 +25,7 @@ class LatTunes(Enum):
   PID_M = 14
   PID_N = 15
   TORQUE = 16
-
+  INDI_COROLLAS_TSS2 = 16
 
 ###### LONG ######
 def set_long_tune(tune, name):
