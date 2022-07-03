@@ -167,7 +167,7 @@ class CarState(CarStateBase):
       ret.cruiseState.speed = cp.vl["PCM_CRUISE_2"]["SET_SPEED"] * CV.KPH_TO_MS
 
     self.mads_enabled = ret.cruiseState.available
-    time.sleep(0.2)
+
     if self.prev_mads_enabled is None:
       self.prev_mads_enabled = self.mads_enabled
 
