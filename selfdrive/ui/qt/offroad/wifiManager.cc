@@ -421,8 +421,7 @@ void WifiManager::tetheringActivated(QDBusPendingCallWatcher *call) {
 }
 
 void WifiManager::setTetheringEnabled(bool enabled) {
-  bool isTetheringEnabled = Params().getBool("IsTetheringEnabled");
-  if (enabled || isTetheringEnabled) {
+  if (enabled) {
     if (!isKnownConnection(tethering_ssid)) {
       addTetheringConnection();
     }
@@ -440,9 +439,6 @@ void WifiManager::setTetheringEnabled(bool enabled) {
 }
 
 bool WifiManager::isTetheringEnabled() {
-  if(Params().getBool("IsTetheringEnabled")){
-    return true;
-  }
   else if (activeAp != "" && activeAp != "/") {
     return get_property(activeAp, "Ssid") == tethering_ssid;
   }
