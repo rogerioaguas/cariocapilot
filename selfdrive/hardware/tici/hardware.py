@@ -471,9 +471,9 @@ class Tici(HardwareBase):
         sudo_write("N", "/sys/kernel/debug/msm_vidc/clock_scaling")
         sudo_write("Y", "/sys/kernel/debug/msm_vidc/disable_thermal_mitigation")
 
-        is_enabled_hotspot = Params().get_bool("IsEnabledHotspot")
-        if is_enabled_hotspot:
-            os.system("nmcli con up Hotspot")
+        # is_enabled_hotspot = Params().get_bool("IsEnabledHotspot")
+        # if is_enabled_hotspot:
+        #     os.system("nmcli con up Hotspot")
 
     def configure_modem(self):
         sim_id = self.get_sim_info().get('sim_id', '')
