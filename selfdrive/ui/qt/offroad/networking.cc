@@ -12,7 +12,6 @@
 #include "selfdrive/ui/qt/qt_window.h"
 #include "selfdrive/ui/qt/widgets/controls.h"
 #include "selfdrive/ui/qt/widgets/scrollview.h"
-#include "common/params.h"
 
 // Networking functions
 
@@ -185,7 +184,7 @@ void AdvancedNetworking::refresh() {
 }
 
 void AdvancedNetworking::toggleTethering(bool enabled) {
-  Params().putBool("IsTetheringEnabled", enabled);
+  params.putBool("IsTetheringEnabled", enabled);
   wifi->setTetheringEnabled(enabled);
   tetheringToggle->setEnabled(false);
 }
