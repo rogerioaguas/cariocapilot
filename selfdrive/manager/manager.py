@@ -90,6 +90,7 @@ def manager_init() -> None:
     ("VisionCurveLaneless", "0"),
     ("VisionTurnSpeedControl", "1"),
     ("StopAndGoHack", "1"),
+    ("IsEnabledHotspot", "0"),
     ("VwAccType", "0"),
   ]
   if not PC:
