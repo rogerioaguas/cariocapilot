@@ -439,7 +439,7 @@ void WifiManager::setTetheringEnabled(bool enabled) {
 }
 
 bool WifiManager::isTetheringEnabled() {
-  if (activeAp != "" && activeAp != "/") {
+  if (activeAp != "" && activeAp != "/" && Params().getBool("HotspotWhenStart")) {
     return get_property(activeAp, "Ssid") == tethering_ssid;
   }
   return false;
