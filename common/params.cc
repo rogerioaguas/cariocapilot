@@ -105,6 +105,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"ControlsdLaggingOff", PERSISTENT},
     {"ControlsReady", CLEAR_ON_MANAGER_START | CLEAR_ON_IGNITION_ON | CLEAR_ON_IGNITION_OFF},
     {"StopAndGoHack", PERSISTENT},
+    {"HotspotWhenStart", PERSISTENT},
     {"CorollaIndi", PERSISTENT},
     {"CurrentRoute", CLEAR_ON_MANAGER_START | CLEAR_ON_IGNITION_ON},
     {"CustomMapbox", PERSISTENT},
