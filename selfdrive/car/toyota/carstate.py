@@ -9,7 +9,7 @@ from selfdrive.car.interfaces import CarStateBase
 from selfdrive.car.toyota.values import ToyotaFlags, CAR, DBC, STEER_THRESHOLD, NO_STOP_TIMER_CAR, TSS2_CAR, RADAR_ACC_CAR, EPS_SCALE, FEATURES
 from common.params import Params
 from common.realtime import DT_CTRL
-import time
+
 _TRAFFIC_SINGAL_MAP = {
   1: "kph",
   36: "mph",
