@@ -202,6 +202,9 @@ void UIState::updateStatus() {
     emit offroadTransition(!scene.started);
   }
 
+  // Change color path "e2e_long" on fly
+  ui_update_params(uiState());
+
   // Handle prime type change
   if (prime_type != prime_type_prev) {
     prime_type_prev = prime_type;
