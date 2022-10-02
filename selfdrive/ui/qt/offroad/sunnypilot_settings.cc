@@ -666,6 +666,8 @@ void MaxTimeOffroad::refresh() {
     label.setText(QString::fromStdString("10h"));
   } else if (option == "12") {
     label.setText(QString::fromStdString("30h"));
+  } else if (option == "13") {
+    label.setText(QString::fromStdString("72h"));
   }
   btnminus.setText("-");
   btnplus.setText("+");
