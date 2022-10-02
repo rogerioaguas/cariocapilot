@@ -113,7 +113,7 @@ class PowerMonitoring:
     if offroad_timestamp is None:
       return False
 
-    max_time_offroad_s = interp(int(self.params.get("MaxTimeOffroad", encoding="utf8")), [0,1,2,3,4,5,6,7,8,9,10,11,12], [0,5,30,60,180,300,600,1800,3600,10800,18000,36000,108000])
+    max_time_offroad_s = interp(int(self.params.get("MaxTimeOffroad", encoding="utf8")), [0,1,2,3,4,5,6,7,8,9,10,11,12,13], [0,5,30,60,180,300,600,1800,3600,10800,18000,36000,108000,259200])
 
     now = sec_since_boot()
     disable_charging = False
