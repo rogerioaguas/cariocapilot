@@ -6,6 +6,7 @@
 
 #include "common/timing.h"
 #include "selfdrive/ui/qt/util.h"
+#include "common/params.h"
 #ifdef ENABLE_MAPS
 #include "selfdrive/ui/qt/maps/map.h"
 #include "selfdrive/ui/qt/maps/map_helpers.h"
@@ -19,6 +20,13 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
   main_layout->addLayout(stacked_layout);
 
   nvg = new AnnotatedCameraWidget(VISION_STREAM_ROAD, this);
+
+  // HelloButton
+  buttons = new ButtonsWindow(this);
+  // We need activate this function "&ButtonsWindow::updateState" only when button need's receive some update, coming from CarState for example. (This cause "slow frame rate" issue)
+  QObject::connect(uiState(), &UIState::uiUpdate, buttons, &ButtonsWindow::updateState);
+
+  stacked_layout->addWidget(buttons);
 
   QWidget * split_wrapper = new QWidget;
   split = new QHBoxLayout(split_wrapper);
@@ -113,6 +121,55 @@ void OnroadWindow::paintEvent(QPaintEvent *event) {
 }
 
 // ***** onroad widgets *****
+
+// HelloButton
+ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
+  QVBoxLayout *main_layout  = new QVBoxLayout(this);
+  QWidget *btns_wrapper = new QWidget;
+  QHBoxLayout *btns_layout  = new QHBoxLayout(btns_wrapper);
+  btns_layout->setSpacing(0);
+  btns_layout->setContentsMargins(282, 0, 30, 30);
+  main_layout->addWidget(btns_wrapper, 0, Qt::AlignBottom);
+  QString initHelloButton = "";
+  helloButton = new QPushButton(initHelloButton);
+  
+  QObject::connect(helloButton, &QPushButton::clicked, [=]() {
+    bool button_state = Params().getBool("AleSato_HelloButton");
+    Params().putBool("AleSato_HelloButton", !button_state);
+    // helloButton->setText(button_state? "Hai!" : "World");
+    // helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(button_state? 2 : 0)));
+  });
+
+  helloButton->setFixedWidth(200);
+  helloButton->setFixedHeight(200);
+  btns_layout->addWidget(helloButton, 0, Qt::AlignLeft);
+  btns_layout->addSpacing(35);  
+
+  setStyleSheet(R"(
+    QPushButton {
+      color: white;
+      text-align: center;
+      padding: 0px;
+      border-width: 12px;
+      border-style: solid;
+      background-color: rgba(75, 75, 75, 0.3);
+    }
+  )");
+
+  helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(1)));
+}
+
+// We need this function when button need's update from CarState for example
+void ButtonsWindow::updateState(const UIState &s) {
+  const auto helloButtonState = Params().getBool("AleSato_HelloButton");
+  if(helloButtonState) {
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(0)));
+    helloButton->setText("STEER\nalways");    
+  } else {
+    helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(2)));
+    helloButton->setText("stock"); 
+  }
+}
 
 // OnroadAlerts
 void OnroadAlerts::updateAlert(const Alert &a, const QColor &color) {
@@ -226,6 +283,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("speedUnit", s.scene.is_metric ? tr("km/h") : tr("mph"));
   setProperty("hideDM", cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE);
   setProperty("status", s.status);
+  setProperty("buttonColorSpeed", Params().getBool("AleSato_HelloButton"));
 
   // update engageability and DM icons at 2Hz
   if (sm.frame % (UI_FREQ / 2) == 0) {
@@ -378,7 +436,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
   // current speed
   configFont(p, "Inter", 176, "Bold");
-  drawText(p, rect().center().x(), 210, speedStr);
+  //drawText(p, rect().center().x(), 210, speedStr);
+
+  // Turning the speed blue
+  drawTextWithColor(p, rect().center().x(), 210, speedStr, buttonColorSpeed ? QColor(20, 20, 255, 255) : QColor(20, 255, 20, 255)); 
+  
+
   configFont(p, "Inter", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
 
@@ -407,6 +470,14 @@ void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &t
   real_rect.moveCenter({x, y - real_rect.height() / 2});
 
   p.setPen(QColor(0xff, 0xff, 0xff, alpha));
+  p.drawText(real_rect.x(), real_rect.bottom(), text);
+}
+
+void AnnotatedCameraWidget::drawTextWithColor(QPainter &p, int x, int y, const QString &text, QColor color) {
+  QRect real_rect = getTextRect(p, 0, text);
+  real_rect.moveCenter({x, y - real_rect.height() / 2});
+
+  p.setPen(color);
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
 
