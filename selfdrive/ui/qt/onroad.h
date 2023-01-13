@@ -57,6 +57,9 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(bool hideDM MEMBER hideDM);
   Q_PROPERTY(bool rightHandDM MEMBER rightHandDM);
   Q_PROPERTY(int status MEMBER status);
+
+  // Ale Sato Stuff
+  Q_PROPERTY(float enginerpm MEMBER enginerpm);
   Q_PROPERTY(bool buttonColorSpeed MEMBER buttonColorSpeed);
 
 public:
@@ -93,6 +96,8 @@ private:
   int skip_frame_count = 0;
   bool wide_cam_requested = false;
 
+  // AleSato stuff
+  float enginerpm; 
   bool buttonColorSpeed = false;
 
 protected:

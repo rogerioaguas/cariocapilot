@@ -65,7 +65,7 @@ class CarState(CarStateBase):
     )
     ret.vEgoRaw = mean([ret.wheelSpeeds.fl, ret.wheelSpeeds.fr, ret.wheelSpeeds.rl, ret.wheelSpeeds.rr])
     ret.vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
-    ret.vEgoCluster = ret.vEgo * 1.015  # minimum of all the cars
+    ret.vEgoCluster = ret.vEgo * 1.095  # minimum of all the cars
 
     ret.standstill = ret.vEgoRaw == 0
 
@@ -176,6 +176,10 @@ class CarState(CarStateBase):
         self.madsEnabled = False
       self.prev_lkas_enabled = self.lkas_enabled 
 
+    # AleSato Stuff
+    self.hellobutton = Params().get_bool("AleSato_HelloButton")
+    ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
+
     return ret
 
   @staticmethod
@@ -211,6 +215,8 @@ class CarState(CarStateBase):
       ("TURN_SIGNALS", "BLINKERS_STATE"),
       ("LKA_STATE", "EPS_STATUS"),
       ("AUTO_HIGH_BEAM", "LIGHT_STALK"),
+      # AleSato
+      ("RPM", "ENGINE_RPM"),
     ]
 
     checks = [
@@ -227,6 +233,8 @@ class CarState(CarStateBase):
       ("PCM_CRUISE", 33),
       ("PCM_CRUISE_SM", 1),
       ("STEER_TORQUE_SENSOR", 50),
+      # AleSato
+      ("ENGINE_RPM", 100),
     ]
 
     if CP.flags & ToyotaFlags.HYBRID:

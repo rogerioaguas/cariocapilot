@@ -6,7 +6,7 @@
 
 #include "common/timing.h"
 #include "selfdrive/ui/qt/util.h"
-#include "common/params.h"
+
 #ifdef ENABLE_MAPS
 #include "selfdrive/ui/qt/maps/map.h"
 #include "selfdrive/ui/qt/maps/map_helpers.h"
@@ -279,11 +279,16 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("is_cruise_set", cruise_set);
   setProperty("is_metric", s.scene.is_metric);
   setProperty("speed", cur_speed);
+
   setProperty("setSpeed", set_speed);
   setProperty("speedUnit", s.scene.is_metric ? tr("km/h") : tr("mph"));
   setProperty("hideDM", cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE);
   setProperty("status", s.status);
-  setProperty("buttonColorSpeed", Params().getBool("AleSato_SteerAlwaysOn"));
+
+  // AleSato stuff
+  float engine_rpm = sm["carState"].getCarState().getEngineRPM();
+  setProperty("enginerpm", engine_rpm);
+  setProperty("buttonColorSpeed", engine_rpm > 0);
 
   // update engageability and DM icons at 2Hz
   if (sm.frame % (UI_FREQ / 2) == 0) {
@@ -434,12 +439,68 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.drawText(speed_limit_rect, Qt::AlignCenter, speedLimitStr);
   }
 
+  // Begin Ale Sato
+  QString engineRPMStr = QString::number(std::nearbyint(enginerpm));
+  // char steerDegStr[16];
+  // snprintf(steerDegStr, sizeof(steerDegStr), "%.2f", steerdeg);
+  // Draw outer box + border to contain set speed and speed limit
+  int my_default_rect_width = 344;
+  int my_rect_width = my_default_rect_width;
+  // if (is_metric || has_eu_speed_limit) my_rect_width = 200;
+  // if (has_us_speed_limit && speedLimitStr.size() >= 3) my_rect_width = 223;
+
+  int my_rect_height = 204;
+  // if (has_us_speed_limit) my_rect_height = 402;
+  // else if (has_eu_speed_limit) my_rect_height = 392;
+
+  int my_top_radius = 32;
+  int my_bottom_radius = has_eu_speed_limit ? 100 : 32;
+
+  QRect my_set_speed_rect(60 + my_default_rect_width / 2 - my_rect_width / 2, 450, my_rect_width, my_rect_height);
+  p.setPen(QPen(whiteColor(75), 6));
+  p.setBrush(blackColor(166));
+  drawRoundedRect(p, my_set_speed_rect, my_top_radius, my_top_radius, my_bottom_radius, my_bottom_radius);
+
+  // Draw ENGINE RPM
+  p.setPen(interpColor(
+    enginerpm,
+    {3000, 3001, 4800},
+    {QColor(0x80, 0xd8, 0xa6, 0xff), QColor(0xff, 0xe4, 0xbf, 0xff), QColor(0xff, 0xbf, 0xbf, 0xff)}
+  ));
+  configFont(p, "Inter", 40, "SemiBold");
+  QRect my_max_rect = getTextRect(p, Qt::AlignCenter, tr("ENGINE RPM"));
+  my_max_rect.moveCenter({my_set_speed_rect.center().x(), 0});
+  my_max_rect.moveTop(my_set_speed_rect.top() + 127);
+  p.drawText(my_max_rect, Qt::AlignCenter, tr("ENGINE RPM"));
+
+  // Draw steer degrees
+  if (is_cruise_set) {
+    if (speedLimit > 0 && status != STATUS_DISENGAGED && status != STATUS_OVERRIDE) {
+      p.setPen(interpColor(
+        setSpeed,
+        {speedLimit + 5, speedLimit + 15, speedLimit + 25},
+        {whiteColor(), QColor(0xff, 0x95, 0x00, 0xff), QColor(0xff, 0x00, 0x00, 0xff)}
+      ));
+    } else {
+      p.setPen(whiteColor());
+    }
+  } else {
+    p.setPen(QColor(0x72, 0x72, 0x72, 0xff));
+  }
+  configFont(p, "Inter", 90, "Bold");
+  QRect my_speed_rect = getTextRect(p, Qt::AlignCenter, engineRPMStr);
+  my_speed_rect.moveCenter({my_set_speed_rect.center().x(), 0});
+  my_speed_rect.moveTop(my_set_speed_rect.top() + 7);
+  p.drawText(my_speed_rect, Qt::AlignCenter, engineRPMStr);
+  // End AleSato
+
+
   // current speed
   configFont(p, "Inter", 176, "Bold");
   //drawText(p, rect().center().x(), 210, speedStr);
 
   // Turning the speed blue
-  drawTextWithColor(p, rect().center().x(), 210, speedStr, buttonColorSpeed ? QColor(20, 20, 255, 255) : QColor(20, 255, 20, 255)); 
+  drawTextWithColor(p, rect().center().x(), 210, speedStr, buttonColorSpeed ? QColor(20, 255, 20, 255) : whiteColor()); 
   
 
   configFont(p, "Inter", 66, "Regular");
