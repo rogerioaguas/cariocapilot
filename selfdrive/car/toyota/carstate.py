@@ -9,6 +9,7 @@ from opendbc.can.can_define import CANDefine
 from opendbc.can.parser import CANParser
 from selfdrive.car.interfaces import CarStateBase
 from selfdrive.car.toyota.values import ToyotaFlags, CAR, DBC, STEER_THRESHOLD, NO_STOP_TIMER_CAR, TSS2_CAR, RADAR_ACC_CAR, EPS_SCALE, UNSUPPORTED_DSU_CAR
+from common.params import Params
 
 
 class CarState(CarStateBase):
@@ -29,6 +30,12 @@ class CarState(CarStateBase):
     self.low_speed_lockout = False
     self.acc_type = 1
     self.lkas_hud = {}
+    self.params = Params()
+
+    # Steer always on stuff , Stolen from spektor56 and sunnyhaibin (Giants shoulders)
+    self.madsEnabled = False
+    self.lkas_enabled = False
+    self.prev_lkas_enabled = False
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
@@ -145,6 +152,18 @@ class CarState(CarStateBase):
 
     if self.CP.carFingerprint != CAR.PRIUS_V:
       self.lkas_hud = copy.copy(cp_cam.vl["LKAS_HUD"])
+      self.lkas_enabled = cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"]
+      if self.prev_lkas_enabled is None:
+        self.prev_lkas_enabled = self.lkas_enabled  
+      if not self.prev_lkas_enabled and self.lkas_enabled and not self.params.get_bool("AleSato_HelloButton") and ret.cruiseState.available:
+        self.params.put_bool('AleSato_HelloButton', True)  
+      elif (self.prev_lkas_enabled and not self.lkas_enabled and self.params.get_bool("AleSato_HelloButton")) or not ret.cruiseState.available:
+        self.params.put_bool('AleSato_HelloButton', False)  
+      if self.params.get_bool("AleSato_HelloButton"):
+        self.madsEnabled = True
+      else:
+        self.madsEnabled = False
+      self.prev_lkas_enabled = self.lkas_enabled 
 
     return ret
 
@@ -267,6 +286,7 @@ class CarState(CarStateBase):
         ("LANE_SWAY_WARNING", "LKAS_HUD"),
         ("LANE_SWAY_SENSITIVITY", "LKAS_HUD"),
         ("LANE_SWAY_TOGGLE", "LKAS_HUD"),
+        ("LKAS_STATUS", "LKAS_HUD"),
       ]
       checks += [
         ("LKAS_HUD", 1),
