@@ -147,8 +147,8 @@ class CarState(CarStateBase):
     elif self.CP.flags & ToyotaFlags.SMART_DSU:
       self.ispressed = cp.vl['SDSU']['FD_BUTTON'] == 1
     if self.ispressed and not self.ispressed_prev:
-      self.e2eLongButton = not self.params.get_bool("EndToEndLong")
-      self.params.put_bool('EndToEndLong', self.e2eLongButton)
+      self.e2eLongButton = not self.params.get_bool("ExperimentalMode")
+      self.params.put_bool('ExperimentalMode', self.e2eLongButton)
     self.ispressed_prev = self.ispressed
 
     ret.genericToggle = bool(cp.vl["LIGHT_STALK"]["AUTO_HIGH_BEAM"])
