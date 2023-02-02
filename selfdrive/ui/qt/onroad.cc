@@ -500,7 +500,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   //drawText(p, rect().center().x(), 210, speedStr);
 
   // Turning the speed blue
-  drawTextWithColor(p, rect().center().x(), 210, speedStr, buttonColorSpeed ? QColor(20, 255, 20, 255) : whiteColor()); 
+  drawTextWithColor(p, rect().center().x(), 210, speedStr, buttonColorSpeed ? whiteColor() : QColor(20, 255, 20, 255)); 
   
 
   configFont(p, "Inter", 66, "Regular");

@@ -98,12 +98,12 @@ class CarController:
 
     can_sends = []
 
-    self.remoteLockDoors = Params.get_bool("AleSato_RemoteLockDoors")
+    self.remoteLockDoors = Params().get_bool("AleSato_RemoteLockDoors")
     if self.remoteLockDoors and not self.lastRemoteLockDoors:
       can_sends.append(make_can_msg(0x750, LOCK_CMD, 0))
     elif not self.remoteLockDoors and self.lastRemoteLockDoors:
       can_sends.append(make_can_msg(0x750, UNLOCK_CMD, 0))
-    self.lastRemoteLockDoors = self.hellobutton
+    self.lastRemoteLockDoors = self.remoteLockDoors
 
     # *** control msgs ***
     # print("steer {0} {1} {2} {3}".format(apply_steer, min_lim, max_lim, CS.steer_torque_motor)

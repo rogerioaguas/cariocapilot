@@ -82,8 +82,6 @@ index = """
     </script>
     <h1>Remote Door Un/Locker</h1>
 
-    <p>Foo.</p>
-    <p><strong>Bar:</strong>TODO</p>
     <p id="demo"></p>
 
     <div class="container">

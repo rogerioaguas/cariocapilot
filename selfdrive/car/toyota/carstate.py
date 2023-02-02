@@ -177,7 +177,6 @@ class CarState(CarStateBase):
       self.prev_lkas_enabled = self.lkas_enabled 
 
     # AleSato Stuff
-    self.hellobutton = Params().get_bool("AleSato_HelloButton")
     ret.engineRPM = cp.vl["ENGINE_RPM"]['RPM']
 
     return ret
