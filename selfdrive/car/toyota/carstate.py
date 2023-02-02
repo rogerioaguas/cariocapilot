@@ -166,11 +166,11 @@ class CarState(CarStateBase):
       self.lkas_enabled = cp_cam.vl["LKAS_HUD"]["LKAS_STATUS"]
       if self.prev_lkas_enabled is None:
         self.prev_lkas_enabled = self.lkas_enabled  
-      if not self.prev_lkas_enabled and self.lkas_enabled and not self.params.get_bool("AleSato_HelloButton") and ret.cruiseState.available:
-        self.params.put_bool('AleSato_HelloButton', True)  
-      elif (self.prev_lkas_enabled and not self.lkas_enabled and self.params.get_bool("AleSato_HelloButton")) or not ret.cruiseState.available:
-        self.params.put_bool('AleSato_HelloButton', False)  
-      if self.params.get_bool("AleSato_HelloButton"):
+      if not self.prev_lkas_enabled and self.lkas_enabled and not self.params.get_bool("AleSato_SteerAlwaysOn") and ret.cruiseState.available:
+        self.params.put_bool('AleSato_SteerAlwaysOn', True)  
+      elif (self.prev_lkas_enabled and not self.lkas_enabled and self.params.get_bool("AleSato_SteerAlwaysOn")) or not ret.cruiseState.available:
+        self.params.put_bool('AleSato_SteerAlwaysOn', False)  
+      if self.params.get_bool("AleSato_SteerAlwaysOn"):
         self.madsEnabled = True
       else:
         self.madsEnabled = False

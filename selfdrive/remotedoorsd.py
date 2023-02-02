@@ -103,12 +103,12 @@ def hello_world():
 last_send_time = time.monotonic()
 @app.route("/lock")
 def lock():
-  Params().put_bool("AleSato_HelloButton", True)
+  Params().put_bool("AleSato_RemoteLockDoors", True)
   return "locked"
 
 @app.route("/unlock")
 def unlock():
-  Params().put_bool("AleSato_HelloButton", False)
+  Params().put_bool("AleSato_RemoteLockDoors", False)
   return "unlocked"
 
 def handle_timeout():

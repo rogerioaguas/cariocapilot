@@ -134,8 +134,8 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
   helloButton = new QPushButton(initHelloButton);
   
   QObject::connect(helloButton, &QPushButton::clicked, [=]() {
-    bool button_state = Params().getBool("AleSato_HelloButton");
-    Params().putBool("AleSato_HelloButton", !button_state);
+    bool button_state = Params().getBool("AleSato_SteerAlwaysOn");
+    Params().putBool("AleSato_SteerAlwaysOn", !button_state);
     // helloButton->setText(button_state? "Hai!" : "World");
     // helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(button_state? 2 : 0)));
   });
@@ -161,7 +161,7 @@ ButtonsWindow::ButtonsWindow(QWidget *parent) : QWidget(parent) {
 
 // We need this function when button need's update from CarState for example
 void ButtonsWindow::updateState(const UIState &s) {
-  const auto helloButtonState = Params().getBool("AleSato_HelloButton");
+  const auto helloButtonState = Params().getBool("AleSato_SteerAlwaysOn");
   if(helloButtonState) {
     helloButton->setStyleSheet(QString("font-size: 45px; border-radius: 100px; border-color: %1").arg(helloButtonColors.at(0)));
     helloButton->setText("STEER\nalways");    
@@ -283,7 +283,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("speedUnit", s.scene.is_metric ? tr("km/h") : tr("mph"));
   setProperty("hideDM", cs.getAlertSize() != cereal::ControlsState::AlertSize::NONE);
   setProperty("status", s.status);
-  setProperty("buttonColorSpeed", Params().getBool("AleSato_HelloButton"));
+  setProperty("buttonColorSpeed", Params().getBool("AleSato_SteerAlwaysOn"));
 
   // update engageability and DM icons at 2Hz
   if (sm.frame % (UI_FREQ / 2) == 0) {

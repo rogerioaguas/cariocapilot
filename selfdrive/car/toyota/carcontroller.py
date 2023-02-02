@@ -1,5 +1,6 @@
 from cereal import car
 from common.numpy_fast import clip, interp
+from common.params import Params
 from selfdrive.car import apply_toyota_steer_torque_limits, create_gas_interceptor_command, make_can_msg
 from selfdrive.car.toyota.toyotacan import create_steer_command, create_ui_command, \
                                            create_accel_command, create_acc_cancel_command, \
@@ -18,6 +19,8 @@ MAX_STEER_RATE_FRAMES = 18  # tx control frames needed before torque can be cut
 # EPS allows user torque above threshold for 50 frames before permanently faulting
 MAX_USER_TORQUE = 500
 
+UNLOCK_CMD = b'\x40\x05\x30\x11\x00\x40\x00\x00'
+LOCK_CMD = b'\x40\x05\x30\x11\x00\x80\x00\x00'
 
 class CarController:
   def __init__(self, dbc_name, CP, VM):
@@ -33,6 +36,8 @@ class CarController:
     self.packer = CANPacker(dbc_name)
     self.gas = 0
     self.accel = 0
+    self.remoteLockDoors = False
+    self.lastRemoteLockDoors = False
 
   def update(self, CC, CS):
     actuators = CC.actuators
@@ -92,6 +97,13 @@ class CarController:
     self.last_standstill = CS.out.standstill
 
     can_sends = []
+
+    self.remoteLockDoors = Params.get_bool("AleSato_RemoteLockDoors")
+    if self.remoteLockDoors and not self.lastRemoteLockDoors:
+      can_sends.append(make_can_msg(0x750, LOCK_CMD, 0))
+    elif not self.remoteLockDoors and self.lastRemoteLockDoors:
+      can_sends.append(make_can_msg(0x750, UNLOCK_CMD, 0))
+    self.lastRemoteLockDoors = self.hellobutton
 
     # *** control msgs ***
     # print("steer {0} {1} {2} {3}".format(apply_steer, min_lim, max_lim, CS.steer_torque_motor)

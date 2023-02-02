@@ -570,8 +570,8 @@ class Controls:
 
     # Check which actuators can be enabled
     standstill = CS.vEgo <= max(self.CP.minSteerSpeed, MIN_LATERAL_CONTROL_SPEED) or CS.standstill
-    CC.latActive = (self.active or self.params.get_bool("AleSato_HelloButton")) and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
-                   (not standstill or self.joystick_mode) and True if not self.params.get_bool("AleSato_HelloButton") else (not CS.vEgo < 50 * CV.KPH_TO_MS) or\
+    CC.latActive = (self.active or self.params.get_bool("AleSato_SteerAlwaysOn")) and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
+                   (not standstill or self.joystick_mode) and True if not self.params.get_bool("AleSato_SteerAlwaysOn") else (not CS.vEgo < 50 * CV.KPH_TO_MS) or\
                    (not (((self.sm.frame - self.last_blinker_frame) * DT_CTRL) < 1.0))
     CC.longActive = self.enabled and not self.events.any(ET.OVERRIDE_LONGITUDINAL) and self.CP.openpilotLongitudinalControl
 
