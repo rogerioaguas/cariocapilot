@@ -81,6 +81,8 @@ index = """
       }
     </script>
     <h1>Remote Door Un/Locker</h1>
+    
+    <p><strong>THE ENGINE MUST BE ON !!</strong></p>
 
     <p id="demo"></p>
 
