@@ -289,6 +289,8 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   float engine_rpm = sm["carState"].getCarState().getEngineRPM();
   setProperty("enginerpm", engine_rpm);
   setProperty("buttonColorSpeed", engine_rpm > 0);
+  float distance_traveled = sm["controlsState"].getControlsState().getDistanceTraveled() / 1000;
+  setProperty("distanceTraveled", distance_traveled);
 
   // update engageability and DM icons at 2Hz
   if (sm.frame % (UI_FREQ / 2) == 0) {
@@ -440,23 +442,14 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // Begin Ale Sato
-  QString engineRPMStr = QString::number(std::nearbyint(enginerpm));
-  // char steerDegStr[16];
-  // snprintf(steerDegStr, sizeof(steerDegStr), "%.2f", steerdeg);
-  // Draw outer box + border to contain set speed and speed limit
-  int my_default_rect_width = 344;
-  int my_rect_width = my_default_rect_width;
-  // if (is_metric || has_eu_speed_limit) my_rect_width = 200;
-  // if (has_us_speed_limit && speedLimitStr.size() >= 3) my_rect_width = 223;
-
+  QString engineRPMStr = buttonColorSpeed? QString::number(std::nearbyint(enginerpm)) : "OFF";
+  int my_rect_width = 344;
   int my_rect_height = 204;
-  // if (has_us_speed_limit) my_rect_height = 402;
-  // else if (has_eu_speed_limit) my_rect_height = 392;
 
   int my_top_radius = 32;
-  int my_bottom_radius = has_eu_speed_limit ? 100 : 32;
+  int my_bottom_radius = 32;
 
-  QRect my_set_speed_rect(60 + my_default_rect_width / 2 - my_rect_width / 2, 450, my_rect_width, my_rect_height);
+  QRect my_set_speed_rect(60, (has_us_speed_limit || has_eu_speed_limit)? 500 : 450, my_rect_width, my_rect_height);
   p.setPen(QPen(whiteColor(75), 6));
   p.setBrush(blackColor(166));
   drawRoundedRect(p, my_set_speed_rect, my_top_radius, my_top_radius, my_bottom_radius, my_bottom_radius);
@@ -474,11 +467,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.drawText(my_max_rect, Qt::AlignCenter, tr("ENGINE RPM"));
 
   // Draw rpm
-  if (is_cruise_set) {
-    if (speedLimit > 0 && status != STATUS_DISENGAGED && status != STATUS_OVERRIDE) {
+  if (buttonColorSpeed) {
+    if ((speedLimit > 0 && status != STATUS_DISENGAGED && status != STATUS_OVERRIDE) || true) {
       p.setPen(interpColor(
-        setSpeed,
-        {speedLimit + 5, speedLimit + 15, speedLimit + 25},
+        enginerpm,
+        {1500, 2100, 3000},
         {whiteColor(), QColor(0xff, 0x95, 0x00, 0xff), QColor(0xff, 0x00, 0x00, 0xff)}
       ));
     } else {
@@ -494,10 +487,59 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.drawText(my_speed_rect, Qt::AlignCenter, engineRPMStr);
   // End AleSato
 
+// Begin2 Ale Sato
+  char distanceTraveledStr[16];
+  snprintf(distanceTraveledStr, sizeof(distanceTraveledStr), "%.2f", distanceTraveled);
+
+  // Draw outer box + border to contain set speed and speed limit
+  int my2_rect_width = 344;
+  int my2_rect_height = 204;
+
+
+  int my2_top_radius = 32;
+  int my2_bottom_radius = 32;
+
+  QRect my2_set_speed_rect(1700, 450, my2_rect_width, my2_rect_height);
+  p.setPen(QPen(whiteColor(75), 6));
+  p.setBrush(blackColor(166));
+  drawRoundedRect(p, my2_set_speed_rect, my2_top_radius, my2_top_radius, my2_bottom_radius, my2_bottom_radius);
+
+  // Draw colored TRIP DIST
+  p.setPen(interpColor(
+    distanceTraveled,
+    {3, 5, 10},
+    {QColor(0xff, 0xbf, 0xbf, 0xff), QColor(0xff, 0xe4, 0xbf, 0xff), QColor(0x80, 0xd8, 0xa6, 0xff)}
+  ));
+  configFont(p, "Inter", 40, "SemiBold");
+  QRect my2_max_rect = getTextRect(p, Qt::AlignCenter, tr("TRIP DIST"));
+  my2_max_rect.moveCenter({my2_set_speed_rect.center().x(), 0});
+  my2_max_rect.moveTop(my2_set_speed_rect.top() + 127);
+  p.drawText(my2_max_rect, Qt::AlignCenter, tr("TRIP DIST"));
+
+  // Draw trip distance
+  if (is_cruise_set || true) {
+    if (speedLimit > 0 && status != STATUS_DISENGAGED && status != STATUS_OVERRIDE) {
+      p.setPen(interpColor(
+        distanceTraveled,
+        {3, 5, 10},
+        {QColor(0xff, 0x00, 0x00, 0xff), QColor(0xff, 0x95, 0x00, 0xff), whiteColor()}
+      ));
+    } else {
+      p.setPen(whiteColor());
+    }
+  } else {
+    p.setPen(QColor(0x72, 0x72, 0x72, 0xff));
+  }
+  configFont(p, "Inter", 90, "Bold");
+  QRect my2_speed_rect = getTextRect(p, Qt::AlignCenter, distanceTraveledStr);
+  my2_speed_rect.moveCenter({my2_set_speed_rect.center().x(), 0});
+  my2_speed_rect.moveTop(my2_set_speed_rect.top() + 7);
+  p.drawText(my2_speed_rect, Qt::AlignCenter, distanceTraveledStr);
+  // End2 AleSato
+
 
   // current speed
   configFont(p, "Inter", 230, "Bold");
-  //drawText(p, rect().center().x(), 210, speedStr);
 
   // Turning the speed blue
   drawTextWithColor(p, rect().center().x(), 210, speedStr, buttonColorSpeed ? whiteColor() : QColor(20, 255, 20, 255)); 

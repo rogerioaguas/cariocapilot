@@ -778,6 +778,7 @@ class Controls:
     controlsState.forceDecel = bool(force_decel)
     controlsState.canErrorCounter = self.can_rcv_timeout_counter
     controlsState.experimentalMode = self.params.get_bool("ExperimentalMode") and self.CP.openpilotLongitudinalControl
+    controlsState.distanceTraveled = self.distance_traveled
 
     lat_tuning = self.CP.lateralTuning.which()
     if self.joystick_mode:

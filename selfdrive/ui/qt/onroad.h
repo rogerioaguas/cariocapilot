@@ -61,6 +61,7 @@ class AnnotatedCameraWidget : public CameraWidget {
   // Ale Sato Stuff
   Q_PROPERTY(float enginerpm MEMBER enginerpm);
   Q_PROPERTY(bool buttonColorSpeed MEMBER buttonColorSpeed);
+  Q_PROPERTY(float distanceTraveled MEMBER distanceTraveled);
 
 public:
   explicit AnnotatedCameraWidget(VisionStreamType type, QWidget* parent = 0);
@@ -99,6 +100,7 @@ private:
   // AleSato stuff
   float enginerpm; 
   bool buttonColorSpeed = false;
+  float distanceTraveled;   
 
 protected:
   void paintGL() override;
