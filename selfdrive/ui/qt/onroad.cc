@@ -489,7 +489,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
 // Begin2 Ale Sato
   char distanceTraveledStr[16];
-  snprintf(distanceTraveledStr, sizeof(distanceTraveledStr), "%.2f", distanceTraveled);
+  snprintf(distanceTraveledStr, sizeof(distanceTraveledStr), "%.1f", distanceTraveled);
 
   // Draw outer box + border to contain set speed and speed limit
   int my2_rect_width = 344;
