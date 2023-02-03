@@ -944,4 +944,9 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.NO_ENTRY: NoEntryAlert("LKAS Disabled"),
   },
 
+  EventName.manualSteeringRequired: {
+    ET.PERMANENT: NormalPermanentAlert("LKAS is PAUSED per blinker\nManual Steering Required"),
+    ET.NO_ENTRY: NoEntryAlert("Manual Steering Required"),
+  },
+
 }

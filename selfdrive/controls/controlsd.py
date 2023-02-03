@@ -573,6 +573,8 @@ class Controls:
     CC.latActive = (self.active or self.params.get_bool("AleSato_SteerAlwaysOn")) and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
                    (not standstill or self.joystick_mode) and True if not self.params.get_bool("AleSato_SteerAlwaysOn") else (not CS.vEgo < 50 * CV.KPH_TO_MS) or\
                    (not (((self.sm.frame - self.last_blinker_frame) * DT_CTRL) < 1.0))
+    if (self.params.get_bool("AleSato_SteerAlwaysOn") and (CS.vEgo < 50 * CV.KPH_TO_MS) and (((self.sm.frame - self.last_blinker_frame) * DT_CTRL) < 1.0)):
+      self.events.add(EventName.manualSteeringRequired) 
     CC.longActive = self.enabled and not self.events.any(ET.OVERRIDE_LONGITUDINAL) and self.CP.openpilotLongitudinalControl
 
     actuators = CC.actuators
