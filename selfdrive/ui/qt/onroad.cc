@@ -461,10 +461,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.setBrush(blackColor(166));
   drawRoundedRect(p, my_set_speed_rect, my_top_radius, my_top_radius, my_bottom_radius, my_bottom_radius);
 
-  // Draw ENGINE RPM
+  // Draw colored ENGINE RPM
   p.setPen(interpColor(
     enginerpm,
-    {3000, 3001, 4800},
+    {1500, 2100, 3000},
     {QColor(0x80, 0xd8, 0xa6, 0xff), QColor(0xff, 0xe4, 0xbf, 0xff), QColor(0xff, 0xbf, 0xbf, 0xff)}
   ));
   configFont(p, "Inter", 40, "SemiBold");
@@ -473,7 +473,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   my_max_rect.moveTop(my_set_speed_rect.top() + 127);
   p.drawText(my_max_rect, Qt::AlignCenter, tr("ENGINE RPM"));
 
-  // Draw steer degrees
+  // Draw rpm
   if (is_cruise_set) {
     if (speedLimit > 0 && status != STATUS_DISENGAGED && status != STATUS_OVERRIDE) {
       p.setPen(interpColor(
@@ -496,7 +496,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
 
   // current speed
-  configFont(p, "Inter", 176, "Bold");
+  configFont(p, "Inter", 230, "Bold");
   //drawText(p, rect().center().x(), 210, speedStr);
 
   // Turning the speed blue
