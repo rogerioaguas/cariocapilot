@@ -949,4 +949,14 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
     ET.NO_ENTRY: NoEntryAlert("Manual Steering Required"),
   },
 
+  EventName.steerSaturated2: {
+    ET.PERMANENT: Alert(
+      "Take Control\nTurn Exceeds Steering Limit",
+      "",
+      AlertStatus.normal, AlertSize.full,
+      Priority.LOWEST, VisualAlert.none, AudibleAlert.warningImmediate, 4.),
+    ET.USER_DISABLE: ImmediateDisableAlert("Manual Steering Required"),
+    ET.NO_ENTRY: NoEntryAlert("Manual Steering Required"),
+  },
+
 }

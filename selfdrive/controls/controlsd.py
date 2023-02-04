@@ -633,7 +633,7 @@ class Controls:
       good_speed = CS.vEgo > 5
       max_torque = abs(self.last_actuators.steer) > 0.99
       if undershooting and turning and good_speed and max_torque:
-        self.events.add(EventName.steerSaturated)
+        self.events.add(EventName.steerSaturated if lac_log.active else EventName.steerSaturated2)
     elif (lac_log.active or self.params.get_bool("AleSato_SteerAlwaysOn")) and lac_log.saturated:
       dpath_points = lat_plan.dPathPoints
       if len(dpath_points):
@@ -648,7 +648,7 @@ class Controls:
         right_deviation = steering_value < 0 and dpath_points[0] > 0.20
 
         if left_deviation or right_deviation:
-          self.events.add(EventName.steerSaturated)
+          self.events.add(EventName.steerSaturated if lac_log.active else EventName.steerSaturated2)
 
     # Ensure no NaNs/Infs
     for p in ACTUATOR_FIELDS:
