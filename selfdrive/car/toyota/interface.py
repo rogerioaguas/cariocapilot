@@ -8,8 +8,9 @@ from selfdrive.car.interfaces import CarInterfaceBase
 
 EventName = car.CarEvent.EventName
 
-
 class CarInterface(CarInterfaceBase):
+  prevMadsEnabled = False
+
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
     return CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX
@@ -256,6 +257,12 @@ class CarInterface(CarInterfaceBase):
         if ret.vEgo < 0.001:
           # while in standstill, send a user alert
           events.add(EventName.manualRestart)
+
+    if not self.prevMadsEnabled and self.CS.madsEnabled:
+      events.add(EventName.steerAlwaysEngageSound)
+    elif self.prevMadsEnabled and not self.CS.madsEnabled:
+      events.add(EventName.steerAlwaysDisengageSound)
+    self.prevMadsEnabled = self.CS.madsEnabled
 
     ret.events = events.to_msg()
 

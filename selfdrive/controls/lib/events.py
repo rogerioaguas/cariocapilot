@@ -945,18 +945,20 @@ EVENTS: Dict[int, Dict[str, Union[Alert, AlertCallbackType]]] = {
   },
 
   EventName.manualSteeringRequired: {
-    ET.PERMANENT: NormalPermanentAlert("LKAS is PAUSED per blinker\nManual Steering Required"),
+    ET.WARNING: Alert(
+      "LKAS is PAUSED per blinker",
+      "Manual Steering Required",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.HIGH, VisualAlert.steerRequired, AudibleAlert.prompt, .1),
     ET.NO_ENTRY: NoEntryAlert("Manual Steering Required"),
   },
 
-  EventName.steerSaturated2: {
-    ET.PERMANENT: Alert(
-      "Take Control\nTurn Exceeds Steering Limit",
-      "",
-      AlertStatus.normal, AlertSize.full,
-      Priority.LOWEST, VisualAlert.none, AudibleAlert.warningImmediate, 4.),
-    ET.USER_DISABLE: ImmediateDisableAlert("Manual Steering Required"),
-    ET.NO_ENTRY: NoEntryAlert("Manual Steering Required"),
+  EventName.steerAlwaysEngageSound: {
+    ET.PERMANENT: EngagementAlert(AudibleAlert.engage),
+  },
+
+  EventName.steerAlwaysDisengageSound: {
+    ET.PERMANENT: EngagementAlert(AudibleAlert.disengage),
   },
 
 }
