@@ -8,6 +8,7 @@
 #include "selfdrive/ui/qt/widgets/input.h"
 #include "selfdrive/ui/qt/widgets/ssh_keys.h"
 #include "selfdrive/ui/qt/widgets/toggle.h"
+#include "selfdrive/hardware/hw.h"
 
 class WifiUI : public QWidget {
   Q_OBJECT
